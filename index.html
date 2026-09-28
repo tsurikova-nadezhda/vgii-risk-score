@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Шкала риска 90-дневной летальности при внутригоспитальном ишемическом инсульте</title>
+<meta name="description" content="Исследовательский калькулятор: шкала риска 90-дневной летальности при внутригоспитальном ишемическом инсульте (ВГИИ), пять групп риска.">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='20' width='5' height='10' fill='%232f7a55'/%3E%3Crect x='8' y='16' width='5' height='14' fill='%23b89a1f'/%3E%3Crect x='14' y='11' width='5' height='19' fill='%23cf7a1d'/%3E%3Crect x='20' y='6' width='5' height='24' fill='%23b8352c'/%3E%3Crect x='26' y='2' width='4' height='28' fill='%23621b2b'/%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#ffffff; --field:#f3f5f8; --ink:#1c2633; --muted:#5a6676; --rule:#d6dce4; --focus:#1f5fbf;
+  --g1:#2f7a55; --g2:#b89a1f; --g3:#cf7a1d; --g4:#b8352c; --g5:#621b2b;
+  --t1:#e7f2ec; --t2:#f7f1d9; --t3:#fbecd9; --t4:#f7dfdc; --t5:#efdde1;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141a22; --field:#1d2530; --ink:#e6ebf1; --muted:#9aa6b4; --rule:#2e3946; --focus:#7fb0ff;
+    --t1:#16322a; --t2:#353018; --t3:#3a2a16; --t4:#3d1f1e; --t5:#361a22;
+  }
+}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Segoe UI","Helvetica Neue",Roboto,"Noto Sans",Arial,system-ui,sans-serif;
+  font-size:16px;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 20px 48px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+  border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+h1{font-size:1.45rem;line-height:1.25;margin:0 0 4px;font-weight:700;max-width:34ch}
+.sub{color:var(--muted);margin:0;font-size:.95rem;max-width:62ch}
+.lang{display:flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden;flex:none}
+.lang button{border:0;background:transparent;color:var(--muted);padding:6px 12px;font:inherit;font-size:.9rem;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:32px;align-items:start}
+@media (max-width:820px){.grid{grid-template-columns:1fr;gap:24px}}
+fieldset{border:0;margin:0;padding:0}
+.q{padding:14px 0;border-bottom:1px solid var(--rule)}
+.q:first-child{padding-top:0}
+.q label.t, .q legend{display:block;font-weight:600;margin-bottom:6px;padding:0}
+.hint{display:block;color:var(--muted);font-size:.86rem;margin-top:4px}
+.num{display:flex;align-items:center;gap:8px}
+.num input{width:6.5em;font:inherit;font-size:1.15rem;font-variant-numeric:tabular-nums;padding:8px 10px;
+  border:1px solid var(--rule);border-radius:6px;background:var(--field);color:var(--ink)}
+.num .pts{margin-left:auto;color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg span{display:block;padding:8px 12px;border:1px solid var(--rule);border-radius:6px;background:var(--field);font-size:.95rem;cursor:pointer}
+.seg span.pts{border:0;background:none;padding:8px 0;cursor:default}
+.seg input:checked + span{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.seg input:focus-visible + span, .num input:focus-visible, .lang button:focus-visible, summary:focus-visible, .btn:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.err{color:var(--g4);font-size:.86rem;margin-top:4px;display:none}
+.err.on{display:block}
+.btn{margin-top:16px;font:inherit;background:transparent;color:var(--muted);border:1px solid var(--rule);border-radius:6px;padding:7px 12px;cursor:pointer}
+
+/* result */
+.res{position:sticky;top:calc(12px + env(safe-area-inset-top,0px))}
+@media (max-width:820px){.res{position:static}}
+.card{border:2px solid var(--gc,var(--rule));border-radius:10px;padding:18px 18px 16px;background:var(--gt,transparent);transition:background-color .25s,border-color .25s}
+@media (prefers-reduced-motion: reduce){.card{transition:none}}
+.score{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.score .n{font-size:3.2rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.score .of{color:var(--muted)}
+.gname{font-size:1.5rem;font-weight:700;color:var(--gc);margin:6px 0 2px}
+.card p{margin:6px 0}
+.big{font-size:1.05rem}
+.ladder{margin:18px 0 6px}
+.ladder .bar{display:grid;grid-template-columns:3fr 2fr 2fr 2fr 2fr;height:14px;border-radius:4px;overflow:hidden}
+.ladder .bar i{display:block}
+.ladder .ticks{position:relative;height:30px;font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.ladder .ticks b{position:absolute;top:4px;transform:translateX(-50%);font-weight:400}
+.ladder .mark{position:absolute;top:-22px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:10px solid var(--ink);transform:translateX(-50%);transition:left .25s}
+@media (prefers-reduced-motion: reduce){.ladder .mark{transition:none}}
+.legend{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;font-size:.74rem;color:var(--muted);line-height:1.25}
+.legend span{border-top:3px solid;padding-top:3px}
+table{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--rule)}
+td:last-child,th:last-child{text-align:right}
+tr.sum td{font-weight:700;border-bottom:0;border-top:2px solid var(--ink)}
+details{margin-top:16px;border-top:1px solid var(--rule);padding-top:10px}
+summary{cursor:pointer;font-weight:600}
+.note{color:var(--muted);font-size:.86rem}
+.warn{border-left:4px solid var(--g3);padding:8px 12px;background:var(--field);font-size:.9rem;margin-top:12px;display:none}
+.warn.on{display:block}
+.empty{color:var(--muted)}
+.disc{margin-top:36px;border-top:2px solid var(--ink);padding-top:14px;font-size:.9rem;color:var(--muted)}
+.disc strong{color:var(--ink)}
+.disc h2{font-size:1rem;color:var(--ink);margin:14px 0 4px}
+.disc p{margin:4px 0;max-width:80ch}
+.gt{width:100%;overflow-x:auto}
+.gt table{min-width:520px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+code{font-family:inherit;background:var(--field);padding:1px 4px;border-radius:3px}
+@media print{.lang,.btn{display:none}.res{position:static}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1 data-i18n="title"></h1>
+    <p class="sub" data-i18n="subtitle"></p>
+  </div>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="ru" aria-pressed="true">RU</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<div class="grid">
+<form id="f" autocomplete="off" novalidate onsubmit="return false">
+  <div class="q">
+    <label class="t" for="nihss" data-i18n="nihss"></label>
+    <div class="num"><input id="nihss" type="number" inputmode="numeric" min="0" max="42" step="1"><span class="pts" id="p_nihss"></span></div>
+    <span class="hint" data-i18n="nihss_h"></span>
+    <span class="err" id="e_nihss" data-i18n="nihss_e"></span>
+  </div>
+  <div class="q">
+    <label class="t" for="age" data-i18n="age"></label>
+    <div class="num"><input id="age" type="number" inputmode="numeric" min="18" max="110" step="1"><span class="pts" id="p_age"></span></div>
+    <span class="err" id="e_age" data-i18n="age_e"></span>
+  </div>
+  <div class="q">
+    <label class="t" for="cci" data-i18n="cci"></label>
+    <div class="num"><input id="cci" type="number" inputmode="numeric" min="0" max="37" step="1"><span class="pts" id="p_cci"></span></div>
+    <span class="hint" data-i18n="cci_h"></span>
+    <span class="err" id="e_cci" data-i18n="cci_e"></span>
+  </div>
+  <fieldset class="q">
+    <legend data-i18n="sepsis"></legend>
+    <div class="seg">
+      <label><input type="radio" name="sepsis" value="0"><span data-i18n="no"></span></label>
+      <label><input type="radio" name="sepsis" value="1"><span data-i18n="yes"></span></label>
+      <span class="pts" id="p_sepsis" style="margin-left:auto;align-self:center;color:var(--muted);font-size:.9rem"></span>
+    </div>
+  </fieldset>
+  <fieldset class="q">
+    <legend data-i18n="surg"></legend>
+    <div class="seg">
+      <label><input type="radio" name="surg" value="none"><span data-i18n="surg_none"></span></label>
+      <label><input type="radio" name="surg" value="emerg"><span data-i18n="surg_emerg"></span></label>
+      <label><input type="radio" name="surg" value="plan"><span data-i18n="surg_plan"></span></label>
+    </div>
+    <span class="hint" data-i18n="surg_h"></span>
+    <span class="pts" id="p_surg" style="display:block;color:var(--muted);font-size:.9rem;margin-top:4px"></span>
+  </fieldset>
+  <button type="button" class="btn" id="reset" data-i18n="reset"></button>
+</form>
+
+<section class="res" aria-live="polite">
+  <div class="card" id="card">
+    <div id="empty" class="empty" data-i18n="empty"></div>
+    <div id="out" hidden>
+      <div class="score"><span class="n" id="s"></span><span class="of" data-i18n="points"></span></div>
+      <div class="gname" id="g"></div>
+      <p class="big" id="obs"></p>
+      <p id="pred"></p>
+      <div class="ladder" aria-hidden="true">
+        <div class="bar"><i style="background:var(--g1)"></i><i style="background:var(--g2)"></i><i style="background:var(--g3)"></i><i style="background:var(--g4)"></i><i style="background:var(--g5)"></i></div>
+        <div class="ticks" id="ticks"><span class="mark" id="mark"></span></div>
+      </div>
+      <div class="legend" id="legend" aria-hidden="true"></div>
+      <div class="warn" id="warn"></div>
+      <details>
+        <summary data-i18n="breakdown"></summary>
+        <table><tbody id="bd"></tbody></table>
+      </details>
+      <details>
+        <summary data-i18n="research"></summary>
+        <p class="note" id="formula"></p>
+        <p class="note" data-i18n="research_note"></p>
+      </details>
+    </div>
+  </div>
+</section>
+</div>
+
+<section class="disc">
+  <p><strong data-i18n="disc_t"></strong> <span data-i18n="disc"></span></p>
+
+  <h2 data-i18n="groups_t"></h2>
+  <div class="gt"><table>
+    <thead><tr><th data-i18n="th_g"></th><th data-i18n="th_p"></th><th data-i18n="th_n"></th><th data-i18n="th_m"></th></tr></thead>
+    <tbody id="gtab"></tbody>
+  </table></div>
+  <p class="note" data-i18n="groups_n"></p>
+
+  <h2 data-i18n="model_t"></h2>
+  <p data-i18n="model"></p>
+
+  <h2 data-i18n="cite_t"></h2>
+  <p data-i18n="cite"></p>
+  <p class="note"><span data-i18n="version"></span> 1.0 · <span data-i18n="privacy"></span></p>
+</section>
+</div>
+
+<script>
+(function(){
+"use strict";
+var GROUPS=[
+ {lo:0,hi:2, c:"--g1",t:"--t1",n:74, d:3, obs:"4,1", ci:"1,4–11,3", obsEn:"4.1", ciEn:"1.4–11.3", ru:"Низкий",en:"Low"},
+ {lo:3,hi:4, c:"--g2",t:"--t2",n:111,d:32,obs:"28,8",ci:"21,2–37,9",obsEn:"28.8",ciEn:"21.2–37.9",ru:"Средний",en:"Intermediate"},
+ {lo:5,hi:6, c:"--g3",t:"--t3",n:101,d:61,obs:"60,4",ci:"50,6–69,4",obsEn:"60.4",ciEn:"50.6–69.4",ru:"Высокий",en:"High"},
+ {lo:7,hi:8, c:"--g4",t:"--t4",n:58, d:52,obs:"89,7",ci:"79,2–95,2",obsEn:"89.7",ciEn:"79.2–95.2",ru:"Очень высокий",en:"Very high"},
+ {lo:9,hi:15,c:"--g5",t:"--t5",n:21, d:21,obs:"100",ci:"83,9–100",obsEn:"100",ciEn:"83.9–100",ru:"Экстремальный",en:"Extreme"}
+];
+var PRED=[4.9,8.0,12.9,20.4,31.5,46.5,64.4,81.9,94.1]; // score 0..8; >=9: >95
+
+var T={
+ru:{
+ title:"Шкала риска 90-дневной летальности при внутригоспитальном ишемическом инсульте",
+ subtitle:"Исследовательский инструмент. Оценка выполняется по данным первых суток после развития ишемического инсульта у пациента, уже находящегося в стационаре.",
+ nihss:"Оценка по шкале NIHSS, баллы", nihss_h:"На момент развития инсульта, 0–42.", nihss_e:"Введите целое число от 0 до 42.",
+ age:"Возраст, полных лет", age_e:"Введите возраст от 18 до 110 лет.",
+ cci:"Индекс коморбидности Чарлсона без возрастной компоненты, баллы",
+ cci_h:"Баллы за возраст к индексу не добавляются: возраст учитывается отдельно.", cci_e:"Введите целое число от 0 до 37.",
+ sepsis:"Сепсис на момент развития инсульта", yes:"Есть", no:"Нет",
+ surg:"Хирургическое вмешательство до развития инсульта (в эту госпитализацию)",
+ surg_none:"Не оперирован", surg_emerg:"Экстренная операция", surg_plan:"Плановая операция",
+ surg_h:"Экстренная операция оценивается так же, как отсутствие операции.",
+ reset:"Очистить",
+ empty:"Заполните все пять полей — результат появится здесь.",
+ points:"сумма баллов (максимум 15)",
+ group:"группа риска",
+ obs:function(g,L){return L==="ru"?("Наблюдаемая 90-дневная летальность в этой группе: <b>"+g.obs+" %</b> (95 % ДИ "+g.ci+"); умерли "+g.d+" из "+g.n+" пациентов."):"";},
+ pred:function(s){return s>=9?"Предсказанная шкалой вероятность смерти при этой сумме баллов: более 95 %.":"Предсказанная шкалой вероятность смерти при этой сумме баллов: "+fmt(PRED[s])+" %.";},
+ breakdown:"Как получена сумма баллов",
+ b_nihss:"NIHSS", b_age:"Возраст", b_cci:"Индекс Чарлсона без возраста", b_sepsis:"Сепсис", b_surg:"Плановая операция не выполнялась", b_sum:"Сумма",
+ research:"Для исследователей: расчёт по исходной формуле",
+ formula:function(pi,p){return "Прогностический индекс ПИ = 0,1088·NIHSS + 0,0150·возраст + 0,1301·ИКЧ + 1,0291·сепсис − 0,7861·плановая операция = <b>"+fmt(pi,2)+"</b>. Вероятность смерти за 90 суток P = 1 − 0,9725<sup>exp(ПИ)</sup> = <b>"+fmt(p,1)+" %</b>.";},
+ research_note:"Шкала — округлённая версия этой формулы; расхождение между ними обычно не превышает нескольких процентных пунктов. Для решений у постели больного используйте группу риска, а не точную цифру.",
+ w_cci:"Индекс Чарлсона выше 17 баллов в данных разработки не встречался: оценка выходит за пределы изученного диапазона.",
+ w_score:"Сумма баллов выше 10 в данных разработки не встречалась: пациент отнесён к группе экстремального риска экстраполяцией.",
+ w_age:"Возраст моложе 30 лет в данных разработки встречался редко; оценка менее надёжна.",
+ disc_t:"Не является медицинским изделием.",
+ disc:"Калькулятор предназначен для научных и образовательных целей. Модель прошла только внутреннюю и временную валидацию на данных одного мегаполиса; внешняя валидация не проводилась. Результат не является основанием для ограничения объёма медицинской помощи: тактика ведения определяется клиническими рекомендациями и комплексной клинической оценкой. Шкала прогнозирует летальность, но не эффект лечения; показания к реперфузионной терапии от группы риска не зависят.",
+ groups_t:"Пять групп риска",
+ th_g:"Группа", th_p:"Баллы", th_n:"Пациентов в когорте", th_m:"Наблюдаемая 90-дневная летальность, % (95 % ДИ)",
+ groups_n:"Когорта разработки: 365 пациентов с внутригоспитальным ишемическим инсультом без COVID-19, 169 летальных исходов за 90 суток. Границы групп заданы заранее по предсказанной вероятности смерти: менее 20 %, 20–44 %, 45–64 %, 65–94 %, 95 % и выше.",
+ model_t:"О модели",
+ model:"Модель пропорциональных рисков Кокса; пять предикторов отобраны методом ЛАССО с оценкой устойчивости в 200 бутстреп-перевыборках. Обучающая выборка — 2015–2019 гг. (254 пациента), временная проверочная — 2020–2025 гг. (111 пациентов). С-индекс модели 0,809 (с поправкой на оптимизм 0,802), на проверочной выборке 0,820; С-индекс балльной шкалы 0,793 и 0,806 соответственно. Баллы получены по методу Sullivan и соавт. (Stat Med, 2004).",
+ cite_t:"Как цитировать",
+ cite:"Коломенцев С. В., Цурикова Н. А. Шкала риска 90-дневной летальности при внутригоспитальном ишемическом инсульте: онлайн-калькулятор, версия 1.0. 2026.",
+ version:"Версия",
+ privacy:"Введённые данные не передаются и не сохраняются: весь расчёт выполняется в вашем браузере."
+},
+en:{
+ title:"90-day mortality risk score for in-hospital ischemic stroke",
+ subtitle:"Research tool. Uses data from the first 24 hours after an ischemic stroke that occurs in a patient who is already hospitalized.",
+ nihss:"NIHSS score, points", nihss_h:"At stroke onset, 0–42.", nihss_e:"Enter a whole number from 0 to 42.",
+ age:"Age, completed years", age_e:"Enter an age from 18 to 110 years.",
+ cci:"Charlson Comorbidity Index without the age component, points",
+ cci_h:"Do not add age points to the index: age is scored separately.", cci_e:"Enter a whole number from 0 to 37.",
+ sepsis:"Sepsis at stroke onset", yes:"Yes", no:"No",
+ surg:"Surgery before stroke onset (during this admission)",
+ surg_none:"No surgery", surg_emerg:"Emergency surgery", surg_plan:"Elective surgery",
+ surg_h:"Emergency surgery is scored the same as no surgery.",
+ reset:"Clear",
+ empty:"Fill in all five fields to see the result here.",
+ points:"total points (maximum 15)",
+ group:"risk group",
+ obs:function(g){return "Observed 90-day mortality in this group: <b>"+g.obsEn+"%</b> (95% CI "+g.ciEn+"); "+g.d+" of "+g.n+" patients died.";},
+ pred:function(s){return s>=9?"Mortality predicted by the score for this total: above 95%.":"Mortality predicted by the score for this total: "+fmt(PRED[s])+"%.";},
+ breakdown:"How the total was calculated",
+ b_nihss:"NIHSS", b_age:"Age", b_cci:"Charlson index without age", b_sepsis:"Sepsis", b_surg:"No elective surgery", b_sum:"Total",
+ research:"For researchers: original model equation",
+ formula:function(pi,p){return "Prognostic index PI = 0.1088·NIHSS + 0.0150·age + 0.1301·CCI + 1.0291·sepsis − 0.7861·elective surgery = <b>"+fmt(pi,2)+"</b>. Probability of death within 90 days P = 1 − 0.9725<sup>exp(PI)</sup> = <b>"+fmt(p,1)+"%</b>.";},
+ research_note:"The score is a rounded version of this equation; the two usually differ by no more than a few percentage points. At the bedside, rely on the risk group rather than the exact figure.",
+ w_cci:"A Charlson index above 17 did not occur in the development data: this estimate lies outside the studied range.",
+ w_score:"A total above 10 did not occur in the development data: the patient is placed in the extreme-risk group by extrapolation.",
+ w_age:"Patients younger than 30 were rare in the development data; the estimate is less reliable.",
+ disc_t:"Not a medical device.",
+ disc:"This calculator is intended for research and education. The model has undergone internal and temporal validation only, in data from a single metropolitan area; no external validation has been performed. The result is not a basis for limiting the scope of care: management follows clinical guidelines and a comprehensive clinical assessment. The score predicts mortality, not treatment effect; eligibility for reperfusion therapy does not depend on the risk group.",
+ groups_t:"Five risk groups",
+ th_g:"Group", th_p:"Points", th_n:"Patients in cohort", th_m:"Observed 90-day mortality, % (95% CI)",
+ groups_n:"Development cohort: 365 patients with in-hospital ischemic stroke without COVID-19; 169 deaths within 90 days. Group boundaries were set in advance by predicted probability of death: below 20%, 20–44%, 45–64%, 65–94%, 95% and above.",
+ model_t:"About the model",
+ model:"Cox proportional hazards model; five predictors selected by LASSO with stability assessment in 200 bootstrap resamples. Development sample 2015–2019 (254 patients), temporal validation sample 2020–2025 (111 patients). Model C-index 0.809 (optimism-corrected 0.802), 0.820 in the validation sample; C-index of the points score 0.793 and 0.806, respectively. Points derived with the method of Sullivan et al. (Stat Med, 2004).",
+ cite_t:"How to cite",
+ cite:"Kolomentsev S.V., Tsurikova N.A. 90-day mortality risk score for in-hospital ischemic stroke: online calculator, version 1.0. 2026.",
+ version:"Version",
+ privacy:"Nothing you enter is sent or stored: all calculations run in your browser."
+}};
+
+var L="ru";
+function fmt(x,d){d=(d===undefined)?1:d;var s=x.toFixed(d);return L==="ru"?s.replace(".",","):s;}
+function $(id){return document.getElementById(id);}
+
+function intVal(id,lo,hi){
+  var el=$(id), v=el.value.trim();
+  if(v===""){ $("e_"+id).classList.remove("on"); el.removeAttribute("aria-invalid"); return null; }
+  var n=Number(v.replace(",","."));
+  var ok=Number.isInteger(n)&&n>=lo&&n<=hi;
+  $("e_"+id).classList.toggle("on",!ok);
+  if(ok) el.removeAttribute("aria-invalid"); else el.setAttribute("aria-invalid","true");
+  return ok?n:NaN;
+}
+function radio(name){var r=document.querySelector('input[name="'+name+'"]:checked');return r?r.value:null;}
+
+function pNihss(n){return Math.min(7,Math.floor(n/5));}
+function pCci(c){return Math.min(4,Math.floor(c/4));}
+function pAge(a){return a>=60?1:0;}
+
+function ptsLabel(v){ if(v===null) return ""; return (L==="ru"?"+"+v+" б.":"+"+v+" pt"); }
+
+function calc(){
+  var n=intVal("nihss",0,42), a=intVal("age",18,110), c=intVal("cci",0,37);
+  var s=radio("sepsis"), g=radio("surg");
+  $("p_nihss").textContent=(n===null||isNaN(n))?"":ptsLabel(pNihss(n));
+  $("p_age").textContent=(a===null||isNaN(a))?"":ptsLabel(pAge(a));
+  $("p_cci").textContent=(c===null||isNaN(c))?"":ptsLabel(pCci(c));
+  $("p_sepsis").textContent=s===null?"":ptsLabel(s==="1"?2:0);
+  $("p_surg").textContent=g===null?"":ptsLabel(g==="plan"?0:1);
+  var ready=[n,a,c].every(function(x){return x!==null&&!isNaN(x);})&&s!==null&&g!==null;
+  $("empty").hidden=ready; $("out").hidden=!ready;
+  var card=$("card");
+  if(!ready){card.style.removeProperty("--gc");card.style.removeProperty("--gt");return;}
+  var parts=[["b_nihss",pNihss(n),n],["b_age",pAge(a),a],["b_cci",pCci(c),c],["b_sepsis",s==="1"?2:0,null],["b_surg",g==="plan"?0:1,null]];
+  var score=parts.reduce(function(t,p){return t+p[1];},0);
+  var grp=GROUPS.filter(function(G){return score>=G.lo&&score<=G.hi;})[0];
+  var tr=T[L];
+  $("s").textContent=score;
+  $("g").textContent=(L==="ru"?grp.ru+" риск":grp.en+" risk");
+  $("obs").innerHTML=tr.obs(grp,L);
+  $("pred").textContent=tr.pred(Math.min(score,9));
+  card.style.setProperty("--gc","var("+grp.c+")");
+  card.style.setProperty("--gt","var("+grp.t+")");
+  // marker position: ladder spans scores 0..10 with columns 3/2/2/2/2 of 11 units
+  var pos=(Math.min(score,10)+0.5)/11*100;
+  $("mark").style.left=pos+"%";
+  // breakdown
+  var rows=parts.map(function(p){
+    var lab=tr[p[0]]+(p[2]!==null?" ("+p[2]+")":"");
+    return "<tr><td>"+lab+"</td><td>+"+p[1]+"</td></tr>";
+  }).join("");
+  rows+="<tr class='sum'><td>"+tr.b_sum+"</td><td>"+score+"</td></tr>";
+  $("bd").innerHTML=rows;
+  // formula
+  var pi=0.1088*n+0.0150*a+0.1301*c+1.0291*(s==="1"?1:0)-0.7861*(g==="plan"?1:0);
+  var p=(1-Math.pow(0.9725,Math.exp(pi)))*100;
+  $("formula").innerHTML=tr.formula(pi,p);
+  // warnings
+  var w=[];
+  if(c>17) w.push(tr.w_cci);
+  if(score>10) w.push(tr.w_score);
+  if(a<30) w.push(tr.w_age);
+  $("warn").innerHTML=w.join("<br>"); $("warn").classList.toggle("on",w.length>0);
+}
+
+function ticks(){
+  var h='<span class="mark" id="mark"></span>';
+  for(var i=0;i<=10;i++){ h+='<b style="left:'+((i+0.5)/11*100)+'%">'+i+'</b>'; }
+  var old=$("mark"); var left=old?old.style.left:"";
+  $("ticks").innerHTML=h; if(left) $("mark").style.left=left;
+  $("legend").innerHTML=GROUPS.map(function(G){
+    var hi=G.hi>10?10:G.hi;
+    return '<span style="border-color:var('+G.c+')">'+(L==="ru"?G.ru:G.en)+'<br>'+G.lo+'–'+hi+'</span>';
+  }).join("");
+  $("gtab").innerHTML=GROUPS.map(function(G){
+    var pts=G.lo+"–"+(G.hi>10?(L==="ru"?"10 и выше":"10 or more"):G.hi);
+    if(G.lo===9) pts=(L==="ru"?"9 и выше":"9 or more");
+    return "<tr><td><span class='sw' style='background:var("+G.c+")'></span>"+(L==="ru"?G.ru:G.en)+"</td><td>"+pts+"</td><td>"+G.n+"</td><td>"+(L==="ru"?G.obs+" ("+G.ci+")":G.obsEn+" ("+G.ciEn+")")+"</td></tr>";
+  }).join("");
+}
+
+function setLang(l){
+  L=l; document.documentElement.lang=l;
+  document.title=T[l].title;
+  document.querySelectorAll("[data-i18n]").forEach(function(el){
+    var v=T[l][el.getAttribute("data-i18n")]; if(typeof v==="string") el.textContent=v;
+  });
+  document.querySelectorAll(".lang button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.lang===l));});
+  try{localStorage.setItem("vgii_lang",l);}catch(e){}
+  try{var u=new URL(location.href);u.searchParams.set("lang",l);history.replaceState(null,"",u);}catch(e){}
+  ticks(); calc();
+}
+
+document.querySelectorAll(".lang button").forEach(function(b){b.addEventListener("click",function(){setLang(b.dataset.lang);});});
+$("f").addEventListener("input",calc);
+$("f").addEventListener("change",calc);
+$("reset").addEventListener("click",function(){$("f").reset();calc();$("nihss").focus();});
+
+var start="ru";
+try{
+  var q=new URLSearchParams(location.search).get("lang");
+  var st=null; try{st=localStorage.getItem("vgii_lang");}catch(e){}
+  if(q==="ru"||q==="en") start=q;
+  else if(st==="ru"||st==="en") start=st;
+  else if(!/^(ru|uk|be|kk)/i.test(navigator.language||"ru")) start="en";
+}catch(e){}
+setLang(start);
+})();
+</script>
+</body>
+</html>

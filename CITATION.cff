@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this calculator, please cite it as below."
+title: "90-day mortality risk score for in-hospital ischemic stroke: online calculator"
+abstract: >-
+  A single-file, offline-capable web calculator implementing a points-based
+  score for 90-day mortality risk after in-hospital ischemic stroke, based on
+  a Cox proportional hazards model (5 predictors, LASSO selection). Research
+  and education tool; not a medical device.
+authors:
+  - family-names: Kolomentsev
+    given-names: Sergei
+    name-suffix: V.
+    # Cyrillic: Коломенцев Сергей Витальевич
+  - family-names: Tsurikova
+    given-names: Nadezhda
+    name-suffix: A.
+    # Cyrillic: Цурикова Надежда Анатольевна
+version: 1.0.0
+date-released: "2026-09-28"
+license: MIT
+repository-code: "https://github.com/tsurikova-nadezhda/vgii-risk-score"
+url: "https://tsurikova-nadezhda.github.io/vgii-risk-score/"
+keywords:
+  - ischemic stroke
+  - in-hospital stroke
+  - mortality
+  - risk score
+  - prognostic model
+  - Cox regression
