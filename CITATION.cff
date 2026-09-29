@@ -15,8 +15,8 @@ authors:
     given-names: Nadezhda
     name-suffix: A.
     # Cyrillic: Цурикова Надежда Анатольевна
-version: 1.0.0
-date-released: "2026-09-28"
+version: 1.1.0
+date-released: "2026-09-29"
 license: MIT
 repository-code: "https://github.com/tsurikova-nadezhda/vgii-risk-score"
 url: "https://tsurikova-nadezhda.github.io/vgii-risk-score/"

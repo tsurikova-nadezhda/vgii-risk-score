@@ -125,9 +125,15 @@ code{font-family:inherit;background:var(--field);padding:1px 4px;border-radius:3
   </div>
   <div class="q">
     <label class="t" for="cci" data-i18n="cci"></label>
-    <div class="num"><input id="cci" type="number" inputmode="numeric" min="0" max="37" step="1"><span class="pts" id="p_cci"></span></div>
-    <span class="hint" data-i18n="cci_h"></span>
+    <div class="seg" role="radiogroup" style="margin-bottom:8px">
+      <label><input type="radio" name="cmode" value="full" checked><span data-i18n="cmode_full"></span></label>
+      <label><input type="radio" name="cmode" value="noage"><span data-i18n="cmode_noage"></span></label>
+    </div>
+    <div class="num"><input id="cci" type="number" inputmode="numeric" min="0" max="41" step="1"><span class="pts" id="p_cci"></span></div>
+    <span class="hint" id="cci_hint"></span>
+    <span class="hint" id="cci_conv"></span>
     <span class="err" id="e_cci" data-i18n="cci_e"></span>
+    <span class="err" id="e_cci_neg" data-i18n="cci_neg"></span>
   </div>
   <fieldset class="q">
     <legend data-i18n="sepsis"></legend>
@@ -193,7 +199,7 @@ code{font-family:inherit;background:var(--field);padding:1px 4px;border-radius:3
 
   <h2 data-i18n="cite_t"></h2>
   <p data-i18n="cite"></p>
-  <p class="note"><span data-i18n="version"></span> 1.0 · <span data-i18n="privacy"></span></p>
+  <p class="note"><span data-i18n="version"></span> 1.1 · <span data-i18n="privacy"></span></p>
 </section>
 </div>
 
@@ -215,8 +221,13 @@ ru:{
  subtitle:"Исследовательский инструмент. Оценка выполняется по данным первых суток после развития ишемического инсульта у пациента, уже находящегося в стационаре.",
  nihss:"Оценка по шкале NIHSS, баллы", nihss_h:"На момент развития инсульта, 0–42.", nihss_e:"Введите целое число от 0 до 42.",
  age:"Возраст, полных лет", age_e:"Введите возраст от 18 до 110 лет.",
- cci:"Индекс коморбидности Чарлсона без возрастной компоненты, баллы",
- cci_h:"Баллы за возраст к индексу не добавляются: возраст учитывается отдельно.", cci_e:"Введите целое число от 0 до 37.",
+ cci:"Индекс коморбидности Чарлсона, баллы",
+ cmode_full:"Ввожу полный индекс (с баллами за возраст)", cmode_noage:"Ввожу индекс без баллов за возраст",
+ cci_h_full:"Калькулятор сам вычтет баллы за возраст: 50–59 лет — 1, 60–69 — 2, 70–79 — 3, 80 и старше — 4.",
+ cci_h_noage:"Введите индекс, посчитанный только по сопутствующим заболеваниям, без баллов за возраст.",
+ cci_conv:function(c,k,r){return "Без баллов за возраст: "+c+" − "+k+" = "+r+".";},
+ cci_neg:"Индекс меньше возрастной поправки. Проверьте, что введён полный индекс с баллами за возраст, или переключитесь на ввод индекса без возраста.",
+ cci_e:"Введите целое число от 0 до 41.",
  sepsis:"Сепсис на момент развития инсульта", yes:"Есть", no:"Нет",
  surg:"Хирургическое вмешательство до развития инсульта (в эту госпитализацию)",
  surg_none:"Не оперирован", surg_emerg:"Экстренная операция", surg_plan:"Плановая операция",
@@ -243,7 +254,7 @@ ru:{
  model_t:"О модели",
  model:"Модель пропорциональных рисков Кокса; пять предикторов отобраны методом ЛАССО с оценкой устойчивости в 200 бутстреп-перевыборках. Обучающая выборка — 2015–2019 гг. (254 пациента), временная проверочная — 2020–2025 гг. (111 пациентов). С-индекс модели 0,809 (с поправкой на оптимизм 0,802), на проверочной выборке 0,820; С-индекс балльной шкалы 0,793 и 0,806 соответственно. Баллы получены по методу Sullivan и соавт. (Stat Med, 2004).",
  cite_t:"Как цитировать",
- cite:"Коломенцев С. В., Цурикова Н. А. Шкала риска 90-дневной летальности при внутригоспитальном ишемическом инсульте: онлайн-калькулятор, версия 1.0. 2026.",
+ cite:"Коломенцев С. В., Цурикова Н. А. Шкала риска 90-дневной летальности при внутригоспитальном ишемическом инсульте: онлайн-калькулятор, версия 1.1. 2026.",
  version:"Версия",
  privacy:"Введённые данные не передаются и не сохраняются: весь расчёт выполняется в вашем браузере."
 },
@@ -252,8 +263,13 @@ en:{
  subtitle:"Research tool. Uses data from the first 24 hours after an ischemic stroke that occurs in a patient who is already hospitalized.",
  nihss:"NIHSS score, points", nihss_h:"At stroke onset, 0–42.", nihss_e:"Enter a whole number from 0 to 42.",
  age:"Age, completed years", age_e:"Enter an age from 18 to 110 years.",
- cci:"Charlson Comorbidity Index without the age component, points",
- cci_h:"Do not add age points to the index: age is scored separately.", cci_e:"Enter a whole number from 0 to 37.",
+ cci:"Charlson Comorbidity Index, points",
+ cmode_full:"I enter the full index (including age points)", cmode_noage:"I enter the index without age points",
+ cci_h_full:"The calculator subtracts the age points itself: 50–59 years — 1, 60–69 — 2, 70–79 — 3, 80 and older — 4.",
+ cci_h_noage:"Enter the index based on comorbid conditions only, without age points.",
+ cci_conv:function(c,k,r){return "Without age points: "+c+" − "+k+" = "+r+".";},
+ cci_neg:"The index is smaller than the age adjustment. Check that you entered the full index including age points, or switch to entering the index without age.",
+ cci_e:"Enter a whole number from 0 to 41.",
  sepsis:"Sepsis at stroke onset", yes:"Yes", no:"No",
  surg:"Surgery before stroke onset (during this admission)",
  surg_none:"No surgery", surg_emerg:"Emergency surgery", surg_plan:"Elective surgery",
@@ -280,7 +296,7 @@ en:{
  model_t:"About the model",
  model:"Cox proportional hazards model; five predictors selected by LASSO with stability assessment in 200 bootstrap resamples. Development sample 2015–2019 (254 patients), temporal validation sample 2020–2025 (111 patients). Model C-index 0.809 (optimism-corrected 0.802), 0.820 in the validation sample; C-index of the points score 0.793 and 0.806, respectively. Points derived with the method of Sullivan et al. (Stat Med, 2004).",
  cite_t:"How to cite",
- cite:"Kolomentsev S.V., Tsurikova N.A. 90-day mortality risk score for in-hospital ischemic stroke: online calculator, version 1.0. 2026.",
+ cite:"Kolomentsev S.V., Tsurikova N.A. 90-day mortality risk score for in-hospital ischemic stroke: online calculator, version 1.1. 2026.",
  version:"Version",
  privacy:"Nothing you enter is sent or stored: all calculations run in your browser."
 }};
@@ -303,12 +319,26 @@ function radio(name){var r=document.querySelector('input[name="'+name+'"]:checke
 function pNihss(n){return Math.min(7,Math.floor(n/5));}
 function pCci(c){return Math.min(4,Math.floor(c/4));}
 function pAge(a){return a>=60?1:0;}
+// Charlson age adjustment (Charlson et al., J Clin Epidemiol 1994): +1 per decade from 50 years
+function ageAdj(a){return a>=80?4:a>=70?3:a>=60?2:a>=50?1:0;}
 
 function ptsLabel(v){ if(v===null) return ""; return (L==="ru"?"+"+v+" б.":"+"+v+" pt"); }
 
 function calc(){
-  var n=intVal("nihss",0,42), a=intVal("age",18,110), c=intVal("cci",0,37);
-  var s=radio("sepsis"), g=radio("surg");
+  var n=intVal("nihss",0,42), a=intVal("age",18,110), c0=intVal("cci",0,41);
+  var s=radio("sepsis"), g=radio("surg"), mode=radio("cmode")||"full";
+  var tr0=T[L];
+  $("cci_hint").textContent=mode==="full"?tr0.cci_h_full:tr0.cci_h_noage;
+  var c=c0, k=0;
+  $("cci_conv").textContent=""; $("e_cci_neg").classList.remove("on");
+  if(mode==="full"&&c0!==null&&!isNaN(c0)){
+    if(a===null||isNaN(a)){ c=null; }
+    else{
+      k=ageAdj(a); c=c0-k;
+      if(c<0){ c=NaN; $("e_cci_neg").classList.add("on"); $("cci").setAttribute("aria-invalid","true"); }
+      else { $("cci_conv").textContent=tr0.cci_conv(c0,k,c); }
+    }
+  }
   $("p_nihss").textContent=(n===null||isNaN(n))?"":ptsLabel(pNihss(n));
   $("p_age").textContent=(a===null||isNaN(a))?"":ptsLabel(pAge(a));
   $("p_cci").textContent=(c===null||isNaN(c))?"":ptsLabel(pCci(c));
@@ -318,7 +348,7 @@ function calc(){
   $("empty").hidden=ready; $("out").hidden=!ready;
   var card=$("card");
   if(!ready){card.style.removeProperty("--gc");card.style.removeProperty("--gt");return;}
-  var parts=[["b_nihss",pNihss(n),n],["b_age",pAge(a),a],["b_cci",pCci(c),c],["b_sepsis",s==="1"?2:0,null],["b_surg",g==="plan"?0:1,null]];
+  var parts=[["b_nihss",pNihss(n),n],["b_age",pAge(a),a],["b_cci",pCci(c),(mode==="full"?(c0+" − "+k+" = "+c):c)],["b_sepsis",s==="1"?2:0,null],["b_surg",g==="plan"?0:1,null]];
   var score=parts.reduce(function(t,p){return t+p[1];},0);
   var grp=GROUPS.filter(function(G){return score>=G.lo&&score<=G.hi;})[0];
   var tr=T[L];

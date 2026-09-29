@@ -1,6 +1,7 @@
 // Проверка калькулятора ВГИИ: открывает index.html локально, прогоняет контрольные
-// случаи из test_cases.md, сверяет сумму баллов / группу / P, следит за консолью и
-// сетевыми запросами. Требует `npm install playwright` (и `npx playwright install chromium`).
+// случаи из test_cases.md (12 случаев, оба режима ИКЧ), сверяет сумму баллов / группу / P,
+// следит за консолью и сетевыми запросами.
+// Требует `npm install playwright` (и `npx playwright install chromium`).
 import { chromium } from "playwright";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -10,16 +11,21 @@ const indexPath = path.resolve(__dirname, "..", "index.html");
 const fileUrl = "file://" + indexPath.replace(/\\/g, "/");
 
 const cases = [
-  { nihss: 3, age: 55, cci: 2, sepsis: "0", surg: "none", score: 1, groupRu: "Низкий", groupEn: "Low", p: "10,8", pEn: "10.8" },
-  { nihss: 12, age: 78, cci: 6, sepsis: "0", surg: "none", score: 5, groupRu: "Высокий", groupEn: "High", p: "51,5", pEn: "51.5" },
-  { nihss: 20, age: 71, cci: 6, sepsis: "1", surg: "none", score: 9, groupRu: "Экстремальный", groupEn: "Extreme", p: "98,7", pEn: "98.7" },
-  { nihss: 6, age: 64, cci: 4, sepsis: "0", surg: "plan", score: 3, groupRu: "Средний" },
-  { nihss: 6, age: 64, cci: 4, sepsis: "0", surg: "emerg", score: 4, groupRu: "Средний" },
-  { nihss: 0, age: 40, cci: 0, sepsis: "0", surg: "plan", score: 0, groupRu: "Низкий" },
-  { nihss: 42, age: 90, cci: 20, sepsis: "1", surg: "none", score: 15, groupRu: "Экстремальный", expectWarn: true },
-  { nihss: 4, age: 59, cci: 3, sepsis: "0", surg: "plan", score: 0, groupRu: "Низкий" },
-  { nihss: 5, age: 60, cci: 4, sepsis: "0", surg: "plan", score: 3, groupRu: "Средний" },
+  { nihss: 3, age: 55, cci: 2, mode: "noage", sepsis: "0", surg: "none", score: 1, groupRu: "Низкий", groupEn: "Low", p: "10,8", pEn: "10.8" },
+  { nihss: 3, age: 55, cci: 3, mode: "full", sepsis: "0", surg: "none", score: 1, groupRu: "Низкий", groupEn: "Low", p: "10,8", pEn: "10.8" },
+  { nihss: 12, age: 78, cci: 6, mode: "noage", sepsis: "0", surg: "none", score: 5, groupRu: "Высокий", groupEn: "High", p: "51,5", pEn: "51.5" },
+  { nihss: 12, age: 78, cci: 9, mode: "full", sepsis: "0", surg: "none", score: 5, groupRu: "Высокий", groupEn: "High", p: "51,5", pEn: "51.5" },
+  { nihss: 20, age: 71, cci: 6, mode: "noage", sepsis: "1", surg: "none", score: 9, groupRu: "Экстремальный", groupEn: "Extreme", p: "98,7", pEn: "98.7" },
+  { nihss: 20, age: 71, cci: 9, mode: "full", sepsis: "1", surg: "none", score: 9, groupRu: "Экстремальный", groupEn: "Extreme", p: "98,7", pEn: "98.7" },
+  { nihss: 6, age: 64, cci: 4, mode: "noage", sepsis: "0", surg: "plan", score: 3, groupRu: "Средний", p: "10,2" },
+  { nihss: 6, age: 64, cci: 6, mode: "full", sepsis: "0", surg: "plan", score: 3, groupRu: "Средний", p: "10,2" },
+  { nihss: 6, age: 64, cci: 4, mode: "noage", sepsis: "0", surg: "emerg", score: 4, groupRu: "Средний" },
+  { nihss: 0, age: 40, cci: 0, mode: "noage", sepsis: "0", surg: "plan", score: 0, groupRu: "Низкий" },
+  { nihss: 42, age: 90, cci: 20, mode: "noage", sepsis: "1", surg: "none", score: 15, groupRu: "Экстремальный", expectWarn: true },
 ];
+
+// Отдельный случай: полный ИКЧ меньше возрастной поправки -> ошибка, результата нет.
+const errorCase = { nihss: 5, age: 85, cci: 3, mode: "full", sepsis: "0", surg: "none" };
 
 let failures = 0;
 const log = (...a) => console.log(...a);
@@ -27,6 +33,7 @@ const log = (...a) => console.log(...a);
 async function fill(page, c) {
   await page.fill("#nihss", String(c.nihss));
   await page.fill("#age", String(c.age));
+  await page.check(`input[name="cmode"][value="${c.mode}"]`);
   await page.fill("#cci", String(c.cci));
   await page.check(`input[name="sepsis"][value="${c.sepsis}"]`);
   await page.check(`input[name="surg"][value="${c.surg}"]`);
@@ -40,7 +47,7 @@ function extractP(formulaHtml) {
 async function run() {
   const browser = await chromium.launch();
 
-  // --- RU: все 9 случаев ---
+  // --- RU: все 11 обычных случаев + случай ошибки ---
   {
     const page = await browser.newPage();
     const consoleErrors = [];
@@ -85,6 +92,17 @@ async function run() {
       }
     }
 
+    // Случай ошибки: индекс меньше возрастной поправки
+    await fill(page, errorCase);
+    const errOn = await page.evaluate(() => document.getElementById("e_cci_neg").classList.contains("on"));
+    const outHidden = await page.evaluate(() => document.getElementById("out").hidden);
+    if (errOn && outHidden) {
+      log("OK   RU#error: показана ошибка «индекс меньше возрастной поправки», результата нет");
+    } else {
+      failures++;
+      log(`FAIL RU#error: ожидалась ошибка и отсутствие результата, errOn=${errOn} outHidden=${outHidden}`);
+    }
+
     if (consoleErrors.length) {
       failures++;
       log("FAIL: ошибки в консоли:", consoleErrors);
@@ -103,7 +121,7 @@ async function run() {
     await page.close();
   }
 
-  // --- EN: первые три случая, ?lang=en ---
+  // --- EN: первые три случая (noage/full варианты первого условия), ?lang=en ---
   {
     const page = await browser.newPage();
     const consoleErrors = [];

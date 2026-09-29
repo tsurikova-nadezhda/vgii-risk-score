@@ -18,6 +18,12 @@
 | Сепсис на момент развития инсульта | нет / есть | 0 / 2 |
 | Плановая операция до развития инсульта | выполнена / не выполнена (не оперирован или экстренная операция) | 0 / 1 |
 
+Поле индекса Чарлсона принимает значение в двух режимах: «полный индекс» (с баллами за возраст —
+калькулятор сам вычитает 1 балл за 50–59 лет, 2 за 60–69, 3 за 70–79, 4 за 80 и старше, по схеме
+Charlson et al., J Clin Epidemiol 1994) или «без баллов за возраст» (готовое значение вводится
+напрямую). Если введён полный индекс, который меньше возрастной поправки, калькулятор показывает
+ошибку и не выдаёт результат.
+
 ## Пять групп риска
 
 Когорта разработки: 365 пациентов с внутригоспитальным ишемическим инсультом без COVID-19, 169 летальных исходов за 90 суток. Границы групп заданы заранее по предсказанной вероятности смерти: менее 20 %, 20–44 %, 45–64 %, 65–94 %, 95 % и выше.
@@ -32,7 +38,7 @@
 
 ## Как цитировать
 
-Коломенцев С. В., Цурикова Н. А. Шкала риска 90-дневной летальности при внутригоспитальном ишемическом инсульте: онлайн-калькулятор, версия 1.0. 2026.
+Коломенцев С. В., Цурикова Н. А. Шкала риска 90-дневной летальности при внутригоспитальном ишемическом инсульте: онлайн-калькулятор, версия 1.1. 2026.
 
 DOI появится после архивации релиза в Zenodo и будет добавлен сюда, в `CITATION.cff` и на страницу калькулятора.
 
@@ -66,6 +72,11 @@ Research calculator: 90-day mortality risk score for in-hospital ischemic stroke
 | Sepsis at stroke onset | no / yes | 0 / 2 |
 | Elective surgery before stroke onset | performed / not performed (no surgery or emergency surgery) | 0 / 1 |
 
+The Charlson index field accepts two modes: "full index" (including age points — the calculator
+subtracts 1 point for 50–59 years, 2 for 60–69, 3 for 70–79, 4 for 80 and older, per Charlson et al.,
+J Clin Epidemiol 1994) or "without age points" (the ready value is entered directly). If the full
+index entered is smaller than the age adjustment, the calculator shows an error and gives no result.
+
 ## Five risk groups
 
 Development cohort: 365 patients with in-hospital ischemic stroke without COVID-19; 169 deaths within 90 days. Group boundaries were set in advance by predicted probability of death: below 20%, 20–44%, 45–64%, 65–94%, 95% and above.
@@ -80,7 +91,7 @@ Development cohort: 365 patients with in-hospital ischemic stroke without COVID-
 
 ## How to cite
 
-Kolomentsev S.V., Tsurikova N.A. 90-day mortality risk score for in-hospital ischemic stroke: online calculator, version 1.0. 2026.
+Kolomentsev S.V., Tsurikova N.A. 90-day mortality risk score for in-hospital ischemic stroke: online calculator, version 1.1. 2026.
 
 The DOI will be added here, to `CITATION.cff`, and to the calculator page once the release is archived on Zenodo.
 
